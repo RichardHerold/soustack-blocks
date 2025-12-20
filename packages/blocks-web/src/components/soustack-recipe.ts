@@ -1,5 +1,6 @@
 import { css, html, LitElement, type TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
+import { getDeclaredStacksList, getRecipeName } from "@soustack/blocks-core";
 
 const normalizeList = (value: unknown): string[] => {
   if (Array.isArray(value)) {
@@ -144,13 +145,10 @@ export class SoustackRecipe extends LitElement {
   render(): TemplateResult {
     const recipe = this.recipe;
     const record = recipe && typeof recipe === "object" ? (recipe as Record<string, unknown>) : undefined;
-    const name =
-      record && typeof record.name === "string" && record.name.trim().length > 0
-        ? record.name
-        : "Recipe";
+    const name = getRecipeName(recipe) || "Recipe";
     const ingredients = record?.ingredients;
     const instructions = record?.instructions;
-    const stacks = record?.stacks ?? record?.declaredStacks ?? record?.stack;
+    const stacks = getDeclaredStacksList(recipe);
 
     return html`
       <article>
