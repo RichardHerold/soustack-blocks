@@ -6,7 +6,7 @@ import { execSync } from 'child_process';
 
 const DEFAULT_MAX_FILE_KB = 512;
 const DEFAULT_MAX_TOTAL_MB = 5;
-const DEFAULT_OUT = 'soustack-injest-repo-pack.md';
+const DEFAULT_OUT = 'soustack-blocks-repo-pack.md';
 
 const argv = process.argv.slice(2);
 const options = {
