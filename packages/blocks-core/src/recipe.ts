@@ -1,4 +1,4 @@
-import { normalizeStacks, type StackInput } from "./stacks";
+import { normalizeStacks, parseStackTag, type StackInput } from "./stacks";
 
 type RecipeLike = {
   name?: string;
@@ -12,18 +12,6 @@ type RecipeLike = {
 
 const isRecipeRecord = (value: unknown): value is RecipeLike =>
   typeof value === "object" && value !== null;
-
-const toStringList = (value: unknown): string[] => {
-  if (Array.isArray(value)) {
-    return value.filter((entry): entry is string => typeof entry === "string");
-  }
-
-  if (typeof value === "string") {
-    return [value];
-  }
-
-  return [];
-};
 
 export const getStacks = (recipe: unknown): Record<string, number> => {
   if (!isRecipeRecord(recipe)) {
@@ -41,8 +29,10 @@ export const hasStack = (recipe: unknown, stackId: string): boolean => {
     return false;
   }
 
+  const parsed = parseStackTag(stackId);
+  const lookupId = parsed?.name ?? stackId;
   const stacks = getStacks(recipe);
-  return (stacks[stackId] ?? 0) > 0;
+  return (stacks[lookupId] ?? 0) > 0;
 };
 
 export const getRecipeName = (recipe: unknown): string => {
@@ -77,14 +67,8 @@ export const getDeclaredStacksList = (recipe: unknown): string[] => {
   const declared =
     recipe.declaredStacksList ?? recipe.declaredStacks ?? recipe.stacks;
 
-  if (Array.isArray(declared)) {
-    return toStringList(declared);
-  }
-
-  if (typeof declared === "string") {
-    return [declared];
-  }
-
   const normalized = normalizeStacks(declared as StackInput);
-  return Object.keys(normalized);
+  return Object.entries(normalized)
+    .sort(([nameA], [nameB]) => nameA.localeCompare(nameB))
+    .map(([name, major]) => `${name}@${major}`);
 };
