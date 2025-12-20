@@ -20,7 +20,7 @@
     "build": "vite build && tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@soustack/blocks-core": "*",
+    "@soustack/blocks-core": "workspace:*",
     "lit": "^3.1.2"
   },
   "devDependencies": {

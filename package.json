@@ -6,6 +6,12 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "npm run dev -w apps/demo"
+    "build:packages": "npm run build -w packages/blocks-core && npm run build -w packages/blocks-web",
+    "dev": "npm run build:packages && npm run dev -w apps/demo",
+    "build": "npm run build:packages && npm run build -w apps/demo",
+    "preview": "npm run build && npm run preview -w apps/demo"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
   }
 }
