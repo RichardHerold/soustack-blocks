@@ -1,0 +1,11 @@
+{
+  "name": "soustack-blocks",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w apps/demo"
+  }
+}
