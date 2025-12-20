@@ -118,7 +118,7 @@ export const normalizeStacks = (input: StackInput): Record<string, number> => {
         return acc;
       }
 
-      acc[parsed.name] = Math.max(...candidates);
+      acc[parsed.name] = Math.max(acc[parsed.name] ?? 0, ...candidates);
       return acc;
     }, {});
   }
