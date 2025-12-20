@@ -30,7 +30,7 @@ export const hasStack = (recipe: unknown, stackId: string): boolean => {
   }
 
   const parsed = parseStackTag(stackId);
-  const lookupId = parsed?.name ?? stackId;
+  const lookupId = parsed?.major ? parsed.name : stackId;
   const stacks = getStacks(recipe);
   return (stacks[lookupId] ?? 0) > 0;
 };
