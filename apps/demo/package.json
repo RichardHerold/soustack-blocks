@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@soustack/blocks-web": "*"
+    "@soustack/blocks-web": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.4.5",
