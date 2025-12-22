@@ -92,7 +92,9 @@ export const normalizeStacks = (input: StackInput): Record<string, number> => {
         const amount =
           toPositiveInteger(entry.amount) ??
           toPositiveInteger(entry.quantity);
-        const candidates = [parsed.major, amount].filter((value): value is number => Boolean(value));
+        const candidates = [parsed.major, amount].filter(
+          (value): value is number => typeof value === "number"
+        );
         if (candidates.length === 0) {
           return acc;
         }
@@ -113,7 +115,9 @@ export const normalizeStacks = (input: StackInput): Record<string, number> => {
       }
 
       const amount = toPositiveInteger(value);
-      const candidates = [parsed.major, amount].filter((item): item is number => Boolean(item));
+      const candidates = [parsed.major, amount].filter(
+        (item): item is number => typeof item === "number"
+      );
       if (candidates.length === 0) {
         return acc;
       }
