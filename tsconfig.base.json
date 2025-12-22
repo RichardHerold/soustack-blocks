@@ -4,6 +4,8 @@
     "module": "ESNext",
     "lib": ["ES2020", "DOM"],
     "moduleResolution": "Bundler",
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
     "jsx": "react-jsx",
     "strict": true,
     "skipLibCheck": true,
