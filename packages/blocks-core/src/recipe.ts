@@ -112,11 +112,16 @@ const normalizeSectionList = (
           const record = entry as Record<string, unknown>;
           const items = normalizeList(record[key] ?? record.items);
           const title = typeof record.section === "string" ? record.section : undefined;
-          if (items.length === 0 && !title) {
+          if (items.length > 0 || title) {
+            return { title, items };
+          }
+
+          const singleItem = stringifyItem(entry);
+          if (!singleItem) {
             return undefined;
           }
 
-          return { title, items };
+          return { items: [singleItem] };
         }
 
         const singleItem = stringifyItem(entry);
