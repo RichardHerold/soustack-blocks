@@ -1,7 +1,18 @@
+type StackEntry = {
+  id?: string;
+  stackId?: string;
+  amount?: number;
+  quantity?: number;
+  version?: unknown;
+  major?: unknown;
+};
+
+type StackRecordValue = number | StackEntry | { amount?: unknown; quantity?: unknown; version?: unknown; major?: unknown };
+
 export type StackInput =
-  | Record<string, number>
+  | Record<string, StackRecordValue>
   | string
-  | Array<string | { id?: string; stackId?: string; amount?: number; quantity?: number }>
+  | Array<string | StackEntry>
   | null
   | undefined;
 
@@ -21,6 +32,23 @@ const toPositiveInteger = (value: unknown): number | null => {
   }
 
   return null;
+};
+
+const extractStackAmount = (value: unknown): number | null => {
+  if (isRecord(value)) {
+    const version = value.version;
+    const candidates = [
+      toPositiveInteger(value.major),
+      toPositiveInteger(value.amount),
+      toPositiveInteger(value.quantity),
+      toPositiveInteger(version),
+      isRecord(version) ? toPositiveInteger(version.major) : null,
+    ];
+
+    return candidates.find((candidate): candidate is number => candidate !== null) ?? null;
+  }
+
+  return toPositiveInteger(value);
 };
 
 const toStackId = (value: unknown): string | null => {
@@ -89,9 +117,7 @@ export const normalizeStacks = (input: StackInput): Record<string, number> => {
           return acc;
         }
 
-        const amount =
-          toPositiveInteger(entry.amount) ??
-          toPositiveInteger(entry.quantity);
+        const amount = extractStackAmount(entry);
         const candidates = [parsed.major, amount].filter(
           (value): value is number => typeof value === "number"
         );
@@ -114,7 +140,7 @@ export const normalizeStacks = (input: StackInput): Record<string, number> => {
         return acc;
       }
 
-      const amount = toPositiveInteger(value);
+      const amount = extractStackAmount(value);
       const candidates = [parsed.major, amount].filter(
         (item): item is number => typeof item === "number"
       );

@@ -1,112 +1,42 @@
 import { css, html, LitElement, type TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { getDeclaredStacksList, getRecipeName } from "@soustack/blocks-core";
+import {
+  getDeclaredStacksList,
+  getIngredientSections,
+  getInstructionSections,
+  getRecipeName,
+  type RecipeSection,
+} from "@soustack/blocks-core";
 
-const normalizeList = (value: unknown): string[] => {
-  if (Array.isArray(value)) {
-    return value.map((item) => stringifyItem(item)).filter(Boolean);
-  }
-
-  if (value && typeof value === "object") {
-    const record = value as Record<string, unknown>;
-    const candidate = Array.isArray(record.items)
-      ? record.items
-      : Object.values(record);
-
-    if (Array.isArray(candidate)) {
-      return candidate.map((item) => stringifyItem(item)).filter(Boolean);
-    }
-  }
-
-  return [];
-};
-
-const stringifyItem = (item: unknown): string => {
-  if (typeof item === "string") {
-    return item;
-  }
-
-  if (typeof item === "number" || typeof item === "boolean") {
-    return String(item);
-  }
-
-  if (item && typeof item === "object") {
-    const record = item as Record<string, unknown>;
-    const label =
-      typeof record.name === "string"
-        ? record.name
-        : typeof record.title === "string"
-          ? record.title
-          : undefined;
-    const amount =
-      typeof record.amount === "string" || typeof record.amount === "number"
-        ? String(record.amount)
-        : typeof record.quantity === "string" ||
-            typeof record.quantity === "number"
-          ? String(record.quantity)
-          : undefined;
-    const description =
-      typeof record.description === "string"
-        ? record.description
-        : typeof record.step === "string"
-          ? record.step
-          : undefined;
-
-    const composed = [label, amount ? `(${amount})` : undefined, description]
-      .filter(Boolean)
-      .join(" ");
-
-    if (composed) {
-      return composed;
-    }
-
-    const entries = Object.entries(record)
-      .map(([key, value]) => {
-        if (
-          typeof value === "string" ||
-          typeof value === "number" ||
-          typeof value === "boolean"
-        ) {
-          return `${key}: ${value}`;
-        }
-
-        return undefined;
-      })
-      .filter((entry): entry is string => Boolean(entry));
-
-    if (entries.length > 0) {
-      return entries.join(", ");
-    }
-  }
-
-  return "";
-};
-
-const renderSection = (
+const renderSectionList = (
   title: string,
-  value: unknown,
-  emptyMessage = "Not provided."
+  sections: RecipeSection[],
+  emptyMessage: string
 ): TemplateResult => {
-  if (typeof value === "string" && value.trim().length > 0) {
-    return html`<section>
-      <h3>${title}</h3>
-      <p>${value}</p>
-    </section>`;
-  }
+  const normalizedSections = sections
+    .map((section) => ({
+      title: section.title,
+      items: section.items.filter(Boolean),
+    }))
+    .filter((section) => section.items.length > 0 || section.title);
 
-  const listItems = normalizeList(value);
-  if (listItems.length > 0) {
+  if (normalizedSections.length === 0) {
     return html`<section>
       <h3>${title}</h3>
-      <ul>
-        ${listItems.map((item) => html`<li>${item}</li>`)}
-      </ul>
+      <p class="empty">${emptyMessage}</p>
     </section>`;
   }
 
   return html`<section>
     <h3>${title}</h3>
-    <p class="empty">${emptyMessage}</p>
+    ${normalizedSections.map(
+      (section) => html`<div class="subsection">
+        ${section.title ? html`<h4>${section.title}</h4>` : null}
+        <ul>
+          ${section.items.map((item) => html`<li>${item}</li>`)}
+        </ul>
+      </div>`
+    )}
   </section>`;
 };
 
@@ -133,6 +63,17 @@ export class SoustackRecipe extends LitElement {
       margin-bottom: 1.25rem;
     }
 
+    .subsection h4 {
+      margin: 0 0 0.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .subsection ul {
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+
     .empty {
       color: #6b7280;
       font-style: italic;
@@ -144,18 +85,18 @@ export class SoustackRecipe extends LitElement {
 
   render(): TemplateResult {
     const recipe = this.recipe;
-    const record = recipe && typeof recipe === "object" ? (recipe as Record<string, unknown>) : undefined;
     const name = getRecipeName(recipe) || "Recipe";
-    const ingredients = record?.ingredients;
-    const instructions = record?.instructions;
+    const ingredients = getIngredientSections(recipe);
+    const instructions = getInstructionSections(recipe);
     const stacks = getDeclaredStacksList(recipe);
+    const stackSections = stacks.length > 0 ? [{ items: stacks }] : [];
 
     return html`
       <article>
         <h2>${name}</h2>
-        ${renderSection("Ingredients", ingredients)}
-        ${renderSection("Instructions", instructions)}
-        ${renderSection("Stacks", stacks, "No stacks declared.")}
+        ${renderSectionList("Ingredients", ingredients, "No ingredients provided.")}
+        ${renderSectionList("Instructions", instructions, "No instructions provided.")}
+        ${renderSectionList("Stacks", stackSections, "No stacks declared.")}
       </article>
     `;
   }
