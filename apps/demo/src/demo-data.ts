@@ -2,12 +2,32 @@ export const recipeFixture = {
   name: "Soustack Seed Recipe",
   profile: "scalable",
   stacks: {
-    quantified: 1,
-    scaling: 1
+    quantified: { version: { major: 2 } },
+    scaling: { major: 1 },
+    structured: { quantity: 1 }
   },
   ingredients: [
-    { name: "Flour", quantity: { amount: 500, unit: "g" } },
-    "Salt to taste"
+    {
+      section: "Dough",
+      ingredients: [
+        { name: "Flour", quantity: 500 },
+        { name: "Water", quantity: "320ml" },
+        { name: "Instant yeast", amount: 5, description: "g" }
+      ]
+    },
+    {
+      section: "Finishing",
+      ingredients: ["Olive oil", "Salt to taste"]
+    }
   ],
-  instructions: ["Mix.", { text: "Bake." }]
+  instructions: [
+    {
+      section: "Prep",
+      steps: ["Combine dry ingredients.", { step: "Mix in water until shaggy." }]
+    },
+    {
+      section: "Bake",
+      steps: ["Rest dough 30 minutes.", "Bake until golden."]
+    }
+  ]
 };
