@@ -4,9 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Soustack Blocks Demo</title>
+    <link rel="alternate" type="application/vnd.soustack+json" href="/samples/sample.soustack.json" />
   </head>
   <body>
     <div id="app"></div>
+    <h2>Embed Showcase</h2>
+    <section>
+      <h3>Explicit URL (data-soustack)</h3>
+      <div data-soustack="/samples/sample.soustack.json"></div>
+    </section>
+    <section>
+      <h3>Discovery (data-soustack-discover)</h3>
+      <div data-soustack-discover></div>
+    </section>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
