@@ -1,0 +1,700 @@
+{
+    "$schema": "https://soustack.spec/soustack.schema.json",
+    "profile": "base",
+    "stacks": {
+      "quantified": 1,
+      "scaling": 1,
+      "structured": 1,
+      "timed": 1,
+      "referenced": 1,
+      "compute": 1,
+      "equipment": 1,
+      "prep": 1,
+      "dietary": 1,
+      "storage": 1,
+      "substitutions": 1,
+      "techniques": 1,
+      "illustrated": 1
+    },
+    "name": "Chocolate Chip Cookies (All Stacks Demo)",
+    "yield": {
+      "amount": 24,
+      "unit": "cookies"
+    },
+    "time": {
+      "total": {
+        "minutes": 75
+      }
+    },
+    "images": [
+      "https://example.com/media/choc-chip-cookies/hero.jpg"
+    ],
+    "videos": [
+      "https://example.com/media/choc-chip-cookies/overview.mp4"
+    ],
+    "metadata": {
+      "version": "demo-1",
+      "source": "synthetic example",
+      "x-debug": {
+        "purpose": "exercise every soustack-spec stack/schema"
+      }
+    },
+    "scaling": {
+      "discrete": {
+        "min": 1,
+        "max": 4,
+        "step": 1
+      }
+    },
+    "equipment": [
+      {
+        "id": "oven",
+        "name": "Oven",
+        "count": 1,
+        "countScaling": "fixed"
+      },
+      {
+        "id": "stand-mixer",
+        "name": "Stand mixer (paddle attachment)",
+        "count": 1,
+        "countScaling": "fixed",
+        "upgrades": [
+          {
+            "minFactor": 3,
+            "use": "spiral-mixer"
+          }
+        ]
+      },
+      {
+        "id": "spiral-mixer",
+        "name": "Spiral mixer (optional, for big batches)",
+        "count": 1,
+        "countScaling": "fixed"
+      },
+      {
+        "id": "mixing-bowl",
+        "name": "Large mixing bowl",
+        "count": 1,
+        "countScaling": "fixed"
+      },
+      {
+        "id": "whisk",
+        "name": "Whisk",
+        "count": 1,
+        "countScaling": "fixed"
+      },
+      {
+        "id": "spatula",
+        "name": "Rubber spatula",
+        "count": 1,
+        "countScaling": "fixed"
+      },
+      {
+        "id": "cookie-scoop",
+        "name": "Cookie scoop (~30 g / 2 Tbsp)",
+        "count": 1,
+        "countScaling": "fixed"
+      },
+      {
+        "id": "sheet-pan",
+        "name": "Half-sheet pan",
+        "count": 2,
+        "countScaling": {
+          "mode": "threshold",
+          "steps": [
+            {
+              "maxFactor": 1,
+              "count": 2
+            },
+            {
+              "maxFactor": 2,
+              "count": 3
+            },
+            {
+              "maxFactor": 4,
+              "count": 5
+            }
+          ]
+        }
+      },
+      {
+        "id": "parchment",
+        "name": "Parchment paper",
+        "count": 2,
+        "countScaling": "linear"
+      },
+      {
+        "id": "cooling-rack",
+        "name": "Wire cooling rack",
+        "count": 1,
+        "countScaling": "fixed"
+      },
+      "kitchen-scale"
+    ],
+    "miseEnPlace": [
+      {
+        "text": "Set the butter and eggs out to take the chill off.",
+        "inputs": [
+          "butter",
+          "eggs"
+        ]
+      },
+      {
+        "text": "Preheat the oven and line the sheet pans with parchment.",
+        "usesEquipment": [
+          "oven",
+          "sheet-pan",
+          "parchment"
+        ]
+      },
+      {
+        "text": "Weigh and whisk the dry ingredients together.",
+        "inputs": [
+          "flour",
+          "baking-soda",
+          "salt"
+        ],
+        "usesEquipment": [
+          "mixing-bowl",
+          "whisk"
+        ]
+      }
+    ],
+    "ingredients": [
+      {
+        "section": "Dry",
+        "ingredients": [
+          {
+            "id": "flour",
+            "name": "All-purpose flour",
+            "quantity": {
+              "amount": 300,
+              "unit": "g"
+            },
+            "scaling": {
+              "mode": "linear"
+            },
+            "metadata": {
+              "brandHint": "any"
+            }
+          },
+          {
+            "id": "baking-soda",
+            "name": "Baking soda",
+            "quantity": {
+              "amount": 1,
+              "unit": "tsp"
+            },
+            "scaling": {
+              "mode": "bakersPercent",
+              "percent": 0.8,
+              "of": "flour"
+            }
+          },
+          {
+            "id": "salt",
+            "name": "Fine sea salt",
+            "quantity": {
+              "amount": 0.75,
+              "unit": "tsp"
+            },
+            "scaling": {
+              "mode": "toTaste"
+            },
+            "prep": "fine"
+          }
+        ]
+      },
+      {
+        "section": "Wet",
+        "ingredients": [
+          {
+            "id": "butter",
+            "name": "Unsalted butter",
+            "quantity": {
+              "amount": 225,
+              "unit": "g"
+            },
+            "scaling": {
+              "mode": "linear"
+            },
+            "prep": [
+              "softened",
+              {
+                "verb": "cut",
+                "detail": "into 1-inch chunks"
+              }
+            ]
+          },
+          {
+            "id": "brown-sugar",
+            "name": "Light brown sugar (packed)",
+            "quantity": {
+              "amount": 200,
+              "unit": "g"
+            },
+            "scaling": {
+              "mode": "linear"
+            }
+          },
+          {
+            "id": "white-sugar",
+            "name": "Granulated sugar",
+            "quantity": {
+              "amount": 100,
+              "unit": "g"
+            },
+            "scaling": {
+              "mode": "linear"
+            }
+          },
+          {
+            "id": "eggs",
+            "name": "Large eggs",
+            "quantity": {
+              "amount": 2,
+              "unit": "egg"
+            },
+            "scaling": {
+              "mode": "discrete",
+              "step": 1,
+              "rounding": "ceil",
+              "min": 1
+            },
+            "prep": [
+              {
+                "verb": "bring",
+                "detail": "to room temperature"
+              }
+            ]
+          },
+          {
+            "id": "vanilla",
+            "name": "Vanilla extract",
+            "quantity": {
+              "amount": 2,
+              "unit": "tsp"
+            },
+            "scaling": {
+              "mode": "fixed"
+            }
+          }
+        ]
+      },
+      {
+        "section": "Mix-ins",
+        "ingredients": [
+          {
+            "id": "chocolate-chips",
+            "name": "Chocolate chips (semi-sweet)",
+            "quantity": {
+              "amount": 250,
+              "unit": "g"
+            },
+            "scaling": {
+              "mode": "linear"
+            },
+            "prep": [
+              {
+                "verb": "reserve",
+                "detail": "a small handful for topping (optional)"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "techniques": [
+      {
+        "id": "t-preheat",
+        "name": "Preheating",
+        "description": "Bring equipment to the target temperature before cooking."
+      },
+      {
+        "id": "t-whisk",
+        "name": "Whisking",
+        "description": "Combine dry ingredients evenly without aerating too aggressively."
+      },
+      {
+        "id": "t-cream",
+        "name": "Creaming",
+        "description": "Beat fat + sugar to incorporate air for lift and texture."
+      },
+      {
+        "id": "t-fold",
+        "name": "Folding",
+        "description": "Gently combine to avoid overmixing and tough cookies."
+      },
+      {
+        "id": "t-portion",
+        "name": "Portioning",
+        "description": "Divide dough into equal pieces for even baking."
+      },
+      {
+        "id": "t-bake",
+        "name": "Baking",
+        "description": "Cook in dry heat until set; carryover finishes the center."
+      },
+      {
+        "id": "t-cool",
+        "name": "Cooling",
+        "description": "Let structure set; texture continues to develop as steam escapes."
+      }
+    ],
+    "instructions": [
+      {
+        "section": "Mix",
+        "steps": [
+          {
+            "id": "s-soften-and-preheat",
+            "text": "Start preheating the oven to 350°F (175°C) while the butter softens and the eggs lose their chill.",
+            "inputs": [
+              "butter",
+              "eggs"
+            ],
+            "usesEquipment": [
+              "oven"
+            ],
+            "techniqueIds": [
+              "t-preheat"
+            ],
+            "temperature": {
+              "target": "oven",
+              "value": 350,
+              "unit": "fahrenheit",
+              "approximate": true
+            },
+            "timing": {
+              "activity": "passive",
+              "duration": {
+                "minutes": 15
+              }
+            },
+            "images": [
+              "https://example.com/media/choc-chip-cookies/preheat.jpg"
+            ]
+          },
+          {
+            "id": "s-mix-dry",
+            "text": "Whisk flour, baking soda, and salt until evenly combined.",
+            "inputs": [
+              "flour",
+              "baking-soda",
+              "salt"
+            ],
+            "usesEquipment": [
+              "mixing-bowl",
+              "whisk"
+            ],
+            "techniqueIds": [
+              "t-whisk"
+            ],
+            "timing": {
+              "activity": "active",
+              "duration": {
+                "minutes": 2
+              }
+            }
+          },
+          {
+            "id": "s-cream",
+            "text": "Cream butter with both sugars until visibly lighter and fluffy.",
+            "inputs": [
+              "butter",
+              "brown-sugar",
+              "white-sugar"
+            ],
+            "dependsOn": [
+              "s-soften-and-preheat"
+            ],
+            "usesEquipment": [
+              "stand-mixer"
+            ],
+            "techniqueIds": [
+              "t-cream"
+            ],
+            "timing": {
+              "activity": "active",
+              "completionCue": "mixture is pale and fluffy"
+            }
+          },
+          {
+            "id": "s-add-eggs-and-vanilla",
+            "text": "Beat in the eggs one at a time, then add vanilla; mix until glossy.",
+            "inputs": [
+              "eggs",
+              "vanilla"
+            ],
+            "dependsOn": [
+              "s-cream"
+            ],
+            "usesEquipment": [
+              "stand-mixer"
+            ],
+            "techniqueIds": [
+              "t-cream"
+            ],
+            "timing": {
+              "activity": "active",
+              "duration": {
+                "minMinutes": 1,
+                "maxMinutes": 2
+              }
+            }
+          },
+          {
+            "id": "s-fold-dry",
+            "text": "Fold the dry ingredients into the wet mixture just until no dry streaks remain.",
+            "inputs": [
+              "flour",
+              "baking-soda",
+              "salt"
+            ],
+            "dependsOn": [
+              "s-add-eggs-and-vanilla"
+            ],
+            "usesEquipment": [
+              "mixing-bowl",
+              "spatula"
+            ],
+            "techniqueIds": [
+              "t-fold"
+            ],
+            "timing": {
+              "activity": "active",
+              "completionCue": "no visible dry flour remains"
+            }
+          },
+          {
+            "id": "s-fold-chocolate",
+            "text": "Fold in the chocolate chips (and optional reserved chips for topping).",
+            "inputs": [
+              "chocolate-chips"
+            ],
+            "dependsOn": [
+              "s-fold-dry"
+            ],
+            "usesEquipment": [
+              "spatula"
+            ],
+            "techniqueIds": [
+              "t-fold"
+            ],
+            "timing": {
+              "activity": "active",
+              "duration": {
+                "minutes": 1
+              }
+            }
+          }
+        ]
+      },
+      {
+        "section": "Portion & Bake",
+        "steps": [
+          {
+            "id": "s-portion",
+            "text": "Scoop ~30 g portions onto parchment-lined sheet pans, leaving space for spreading.",
+            "inputs": [
+              "chocolate-chips",
+              "flour",
+              "butter"
+            ],
+            "dependsOn": [
+              "s-fold-chocolate"
+            ],
+            "usesEquipment": [
+              "cookie-scoop",
+              "sheet-pan",
+              "parchment"
+            ],
+            "techniqueIds": [
+              "t-portion"
+            ],
+            "timing": {
+              "activity": "active",
+              "duration": {
+                "minutes": 5
+              }
+            },
+            "videos": [
+              "https://example.com/media/choc-chip-cookies/scoop.mp4"
+            ]
+          },
+          {
+            "id": "s-bake",
+            "text": "Bake until the edges are set and lightly browned while the centers are still soft.",
+            "inputs": [
+              "flour",
+              "butter",
+              "brown-sugar",
+              "white-sugar"
+            ],
+            "dependsOn": [
+              "s-portion"
+            ],
+            "usesEquipment": [
+              "oven",
+              "sheet-pan"
+            ],
+            "techniqueIds": [
+              "t-bake"
+            ],
+            "temperature": {
+              "target": "oven",
+              "value": 350,
+              "unit": "fahrenheit"
+            },
+            "timing": {
+              "activity": "passive",
+              "duration": {
+                "minMinutes": 10,
+                "maxMinutes": 12
+              }
+            }
+          },
+          {
+            "id": "s-cool",
+            "text": "Cool on the pan for 5 minutes, then transfer to a rack to finish cooling.",
+            "inputs": [
+              "flour"
+            ],
+            "dependsOn": [
+              "s-bake"
+            ],
+            "usesEquipment": [
+              "sheet-pan",
+              "cooling-rack"
+            ],
+            "techniqueIds": [
+              "t-cool"
+            ],
+            "timing": {
+              "activity": "passive",
+              "duration": {
+                "minutes": 10
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "dietary": {
+      "basis": "perServing",
+      "calories": 210,
+      "macros": {
+        "protein": 2.5,
+        "fat": 10.5,
+        "carbohydrates": 27
+      },
+      "diets": [
+        "vegetarian"
+      ],
+      "allergens": [
+        "gluten",
+        "eggs",
+        "dairy"
+      ]
+    },
+    "storage": {
+      "refrigerated": {
+        "duration": {
+          "iso8601": "P5D"
+        },
+        "notes": "Store baked cookies in an airtight container to slow staling."
+      },
+      "leftovers": {
+        "notes": "For best texture, reheat briefly.",
+        "portioning": {
+          "notes": "Portion as 2 cookies per snack serving.",
+          "recommendedPortion": {
+            "quantity": 2,
+            "unit": "cookies"
+          }
+        },
+        "reheat": [
+          {
+            "method": "microwave",
+            "duration": {
+              "minMinutes": 0,
+              "maxMinutes": 1
+            },
+            "notes": "10–20 seconds is usually enough; stop when just warm."
+          },
+          {
+            "method": "oven",
+            "temp": {
+              "value": 300,
+              "unit": "F"
+            },
+            "duration": {
+              "minMinutes": 3,
+              "maxMinutes": 5
+            },
+            "notes": "Warm to refresh crisp edges."
+          }
+        ]
+      }
+    },
+    "substitutions": [
+      {
+        "for": "butter",
+        "alternatives": [
+          {
+            "name": "Salted butter",
+            "ratio": "1:1",
+            "metadata": {
+              "x-altNotes": {
+                "notes": "Reduce the salt slightly."
+              }
+            }
+          },
+          {
+            "name": "Vegan butter",
+            "ratio": "1:1",
+            "metadata": {
+              "x-altNotes": {
+                "notes": "Chill dough 20 minutes if it spreads too much."
+              }
+            }
+          }
+        ],
+        "metadata": {
+          "x-substitutionNotes": {
+            "critical": false,
+            "impact": "flavor",
+            "dietary": [
+              "dairy-free",
+              "vegan"
+            ],
+            "notes": "Swaps that change spread and flavor."
+          }
+        }
+      },
+      {
+        "for": "eggs",
+        "alternatives": [
+          {
+            "name": "Flax egg",
+            "ratio": "1 egg : 1 tbsp ground flax + 2.5 tbsp water",
+            "metadata": {
+              "x-altNotes": {
+                "notes": "Rest 5 minutes to gel."
+              }
+            }
+          }
+        ],
+        "metadata": {
+          "x-substitutionNotes": {
+            "critical": true,
+            "impact": "texture",
+            "dietary": [
+              "vegan"
+            ],
+            "notes": "Egg substitutes can make cookies denser; expect a different chew."
+          }
+        }
+      }
+    ]
+  }
+  

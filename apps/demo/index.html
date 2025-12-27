@@ -7,8 +7,13 @@
     <link rel="alternate" type="application/vnd.soustack+json" href="/samples/sample.soustack.json" />
   </head>
   <body>
+    <nav style="padding: 1rem 2rem; border-bottom: 1px solid #e5e7eb; background: #ffffff;">
+      <a href="#embed-showcase" style="margin-right: 1.5rem; color: #3b82f6; text-decoration: none; font-weight: 500;">Embed Showcase</a>
+      <a href="#design-sandbox" style="color: #3b82f6; text-decoration: none; font-weight: 500;">Design Sandbox</a>
+    </nav>
     <div id="app"></div>
-    <h2>Embed Showcase</h2>
+    <div id="embed-showcase">
+      <h2>Embed Showcase</h2>
     <section>
       <h3>Explicit URL (data-soustack)</h3>
       <div data-soustack="/samples/sample.soustack.json"></div>
@@ -23,6 +28,8 @@
         <div data-soustack="/samples/sample.soustack.json"></div>
       </div>
     </section>
+    </div>
+    <div id="design-sandbox"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

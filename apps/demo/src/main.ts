@@ -1,6 +1,7 @@
 import "@soustack/blocks-web";
 import { init } from "@soustack/embed";
 import { recipeFixture } from "./demo-data";
+import { renderDesignSandbox } from "./design-sandbox";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
@@ -24,3 +25,9 @@ if (app) {
 
 // Initialize embed
 init();
+
+// Render design sandbox
+const sandboxContainer = document.getElementById("design-sandbox");
+if (sandboxContainer) {
+  renderDesignSandbox(sandboxContainer);
+}
