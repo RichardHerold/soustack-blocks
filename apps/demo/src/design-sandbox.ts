@@ -1,4 +1,5 @@
 import "@soustack/blocks-web";
+import { interactiveRecipeFixture } from "./demo-data";
 
 /**
  * Design Sandbox for <soustack-recipe> component
@@ -140,8 +141,47 @@ const minimalRecipe = {
   stacks: {}
 };
 
+// Paragraph-style recipe: instructions written as prose/paragraphs rather than step-by-step
+const paragraphStyleRecipe = {
+  name: "Classic French Onion Soup",
+  ingredients: [
+    "4 large yellow onions, thinly sliced",
+    "3 tablespoons unsalted butter",
+    "1 tablespoon olive oil",
+    "1 teaspoon salt",
+    "1/2 teaspoon sugar",
+    "2 cloves garlic, minced",
+    "8 cups beef stock",
+    "1/2 cup dry white wine",
+    "2 bay leaves",
+    "1 teaspoon fresh thyme leaves",
+    "Salt and freshly ground black pepper",
+    "4-6 slices French bread, toasted",
+    "1 1/2 cups Gruyère cheese, grated"
+  ],
+  instructions: [
+    {
+      section: "Prep",
+      steps: [
+        "Begin by slicing the onions very thinly. This is crucial for achieving the right texture - you want them to melt down completely during the long cooking process. Heat the butter and olive oil in a large, heavy-bottomed pot over medium-low heat. Add the onions and stir to coat them with the fat. Sprinkle with salt and sugar, which will help draw out moisture and promote caramelization."
+      ]
+    },
+    {
+      section: "Cook",
+      steps: [
+        "Cook the onions very slowly, stirring occasionally, for about 45 minutes to an hour. You want them to become deeply golden brown and caramelized, but not burned. This slow cooking process is what develops the rich, sweet flavor that makes French onion soup so distinctive. If the onions start to stick or brown too quickly, reduce the heat slightly and add a splash of water.",
+        "Once the onions are deeply caramelized, add the minced garlic and cook for another minute until fragrant. Pour in the white wine and scrape up any browned bits from the bottom of the pot. Let the wine reduce by about half, then add the beef stock, bay leaves, and thyme. Bring to a simmer, then reduce the heat and let it cook gently for at least 30 minutes to allow the flavors to meld together. Season with salt and pepper to taste.",
+        "While the soup is simmering, preheat your broiler. Ladle the hot soup into oven-safe bowls, filling them about three-quarters full. Top each bowl with a slice of toasted French bread, then generously cover with grated Gruyère cheese. Place the bowls on a baking sheet and broil until the cheese is bubbly and golden brown, about 3-5 minutes. Serve immediately while hot and bubbly."
+      ]
+    }
+  ],
+  stacks: {
+    traditional: { method: 1 }
+  }
+};
+
 // All fixtures for iteration
-const fixtures = [simpleRecipe, longRecipe, multiSectionRecipe, minimalRecipe];
+const fixtures = [simpleRecipe, longRecipe, multiSectionRecipe, minimalRecipe, paragraphStyleRecipe];
 
 /**
  * Renders the design sandbox into a container element.
@@ -197,6 +237,8 @@ export function renderDesignSandbox(container: HTMLElement): void {
         border-radius: 8px;
         padding: 1rem;
         background: #f9fafb;
+        width: 100%;
+        box-sizing: border-box;
       }
 
       .frame-content.narrow {
@@ -205,6 +247,10 @@ export function renderDesignSandbox(container: HTMLElement): void {
 
       .frame-content.wide {
         max-width: 900px;
+      }
+
+      .frame-content > div {
+        width: 100%;
       }
 
       .frame-content.themed {
@@ -257,6 +303,12 @@ export function renderDesignSandbox(container: HTMLElement): void {
       <div class="sandbox-header">
         <h2>Design Sandbox</h2>
         <p>Fast-iteration testing for recipe card designs. Edit fixtures in <code>design-sandbox.ts</code> and CSS variables for theming.</p>
+      </div>
+
+      <div style="margin: 2rem 0; padding: 1.5rem; background: #fef3c7; border: 2px solid #f59e0b; border-radius: 8px;">
+        <h3 style="margin: 0 0 0.5rem 0; color: #92400e; font-size: 1.25rem;">✨ New Interactive Recipe Card</h3>
+        <p style="margin: 0 0 1rem 0; color: #78350f; font-size: 0.9375rem;">Try the new <code>&lt;soustack-recipe-card&gt;</code> with scaling controls and Mise en place view!</p>
+        <div id="interactive-recipe-card-demo"></div>
       </div>
 
       <div class="frames-grid">
@@ -315,10 +367,23 @@ export function renderDesignSandbox(container: HTMLElement): void {
             <div class="recipe-item-label">Minimal</div>
             <div id="fixture-minimal"></div>
           </div>
+          <div class="recipe-item">
+            <div class="recipe-item-label">Paragraph Style</div>
+            <div id="fixture-paragraph"></div>
+          </div>
         </div>
       </div>
     </div>
   `;
+
+  // Render interactive recipe card
+  const interactiveContainer = document.getElementById("interactive-recipe-card-demo");
+  if (interactiveContainer) {
+    const recipeCard = document.createElement("soustack-recipe-card");
+    recipeCard.recipe = interactiveRecipeFixture;
+    recipeCard.setAttribute("expanded", "");
+    interactiveContainer.appendChild(recipeCard);
+  }
 
   // Render recipe cards in frames
   const renderRecipe = (recipe: unknown, containerId: string) => {
@@ -344,5 +409,6 @@ export function renderDesignSandbox(container: HTMLElement): void {
   renderRecipe(fixtures[1], "fixture-long");
   renderRecipe(fixtures[2], "fixture-multisection");
   renderRecipe(fixtures[3], "fixture-minimal");
+  renderRecipe(fixtures[4], "fixture-paragraph");
 }
 

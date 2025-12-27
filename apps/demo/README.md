@@ -74,6 +74,40 @@ const fixtures = [simpleRecipe, longRecipe, multiSectionRecipe, minimalRecipe, m
 
 3. Optionally render it in the showcase by adding a new grid item in the `renderDesignSandbox` function.
 
+## Components
+
+### `<soustack-recipe-card>`
+
+An interactive recipe card component with scaling controls and two-view toggle (Cook / Mise en place).
+
+**Props:**
+- `recipe` (required): Recipe object with the following expected fields:
+  - `name` or `title`: Recipe name
+  - `servings` or `yield`: Servings information (number or `{ amount: number }` or `{ servings: number }`)
+  - `ingredients`: Array of ingredient entries (strings, objects, or subsections with `{ subsection: string, items: [...] }`)
+  - `instructions`: Array of instruction entries (strings, objects, or subsections with `{ subsection: string, items: [...] }`)
+  - `equipment`: Optional array of equipment strings
+  - `time`: Optional object with `prep`, `cook`, `total` (strings or numbers)
+  - `scaleWarnings`: Optional array of warning strings shown when scaling
+
+**Ingredient entry format:**
+- Plain string: `"1 cup flour"`
+- Object: `{ name: "Flour", quantity: 1, unit: "cup", scaleBehavior: "linear" }`
+- Subsection: `{ subsection: "Dry Ingredients", items: [...] }`
+
+**Instruction entry format:**
+- Plain string: `"Mix ingredients"`
+- Object: `{ step: "Mix ingredients", scaleAdjustment: { trigger: 2, note: "Use larger bowl" } }`
+- Subsection: `{ subsection: "Preparation", items: [...] }`
+
+**Features:**
+- Expandable/collapsible card
+- Servings scaling with +/− controls and Half/Reset/Double quick buttons
+- Two views: "Cook" (ingredients + instructions) and "Mise en place" (equipment + prep tasks)
+- Ingredient scaling with support for linear, sublinear, fixed, taste, and stepped behaviors
+- Prep tasks grouped by `prepAction` in Mise en place view
+- Scale adjustment notes in instructions (shown when scaleFactor matches trigger)
+
 ## Theming
 
 Override CSS variables on any container to theme the recipe cards:
