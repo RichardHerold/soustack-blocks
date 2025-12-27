@@ -26,8 +26,17 @@ if (app) {
 // Initialize embed
 init();
 
-// Render design sandbox
-const sandboxContainer = document.getElementById("design-sandbox");
-if (sandboxContainer) {
-  renderDesignSandbox(sandboxContainer);
+// Render design sandbox - wait for DOM to be ready
+const renderSandboxWhenReady = () => {
+  const sandboxContainer = document.getElementById("design-sandbox");
+  if (sandboxContainer) {
+    renderDesignSandbox(sandboxContainer);
+  }
+};
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", renderSandboxWhenReady);
+} else {
+  // DOM is already ready
+  renderSandboxWhenReady();
 }
