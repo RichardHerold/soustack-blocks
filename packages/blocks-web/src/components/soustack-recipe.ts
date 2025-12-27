@@ -21,18 +21,18 @@ const renderSectionList = (
     .filter((section) => section.items.length > 0 || section.title);
 
   if (normalizedSections.length === 0) {
-    return html`<section>
-      <h3>${title}</h3>
+    return html`<section class="recipe-section">
+      <h3 class="section-title">${title}</h3>
       <p class="empty">${emptyMessage}</p>
     </section>`;
   }
 
-  return html`<section>
-    <h3>${title}</h3>
+  return html`<section class="recipe-section">
+    <h3 class="section-title">${title}</h3>
     ${normalizedSections.map(
       (section) => html`<div class="subsection">
-        ${section.title ? html`<h4>${section.title}</h4>` : null}
-        <ul>
+        ${section.title ? html`<label class="subsection-label">${section.title}</label>` : null}
+        <ul class="items">
           ${section.items.map((item) => html`<li>${item}</li>`)}
         </ul>
       </div>`
@@ -44,39 +44,92 @@ const renderSectionList = (
 export class SoustackRecipe extends LitElement {
   static styles = css`
     :host {
+      --soustack-accent: #3b82f6;
+      --soustack-border: #e5e7eb;
+      --soustack-card-bg: #ffffff;
+      --soustack-text: #1f2933;
+      --soustack-text-muted: #6b7280;
+      --soustack-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+
       display: block;
-      padding: 1.5rem;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      background: #ffffff;
-      color: #1f2933;
       max-width: 720px;
     }
 
-    h2 {
-      margin: 0 0 1rem;
+    .recipe-card {
+      border: 1px solid var(--soustack-border);
+      border-radius: 12px;
+      background: var(--soustack-card-bg);
+      color: var(--soustack-text);
+      padding: 1.5rem;
+      box-shadow: var(--soustack-shadow);
+      transition: box-shadow 0.2s ease;
+    }
+
+    .recipe-card:hover {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .recipe-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .recipe-title {
+      margin: 0;
       font-size: 1.5rem;
       font-weight: 600;
+      color: var(--soustack-text);
     }
 
-    section {
-      margin-bottom: 1.25rem;
+    .recipe-section {
+      margin-bottom: 1.5rem;
     }
 
-    .subsection h4 {
-      margin: 0 0 0.5rem;
-      font-size: 1rem;
+    .recipe-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-title {
+      margin: 0 0 0.75rem;
+      font-size: 1.125rem;
       font-weight: 600;
+      color: var(--soustack-text);
     }
 
-    .subsection ul {
+    .subsection {
+      margin-bottom: 1rem;
+    }
+
+    .subsection:last-child {
+      margin-bottom: 0;
+    }
+
+    .subsection-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--soustack-text-muted);
+    }
+
+    .items {
+      list-style: none;
       margin: 0;
-      padding-left: 1.25rem;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .items li {
+      line-height: 1.6;
     }
 
     .empty {
-      color: #6b7280;
+      color: var(--soustack-text-muted);
       font-style: italic;
+      margin: 0;
     }
   `;
 
@@ -92,12 +145,14 @@ export class SoustackRecipe extends LitElement {
     const stackSections = stacks.length > 0 ? [{ items: stacks }] : [];
 
     return html`
-      <article>
-        <h2>${name}</h2>
+      <div class="recipe-card">
+        <header class="recipe-header">
+          <h2 class="recipe-title">${name}</h2>
+        </header>
         ${renderSectionList("Ingredients", ingredients, "No ingredients provided.")}
         ${renderSectionList("Instructions", instructions, "No instructions provided.")}
         ${renderSectionList("Stacks", stackSections, "No stacks declared.")}
-      </article>
+      </div>
     `;
   }
 }
