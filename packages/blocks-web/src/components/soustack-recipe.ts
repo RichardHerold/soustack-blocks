@@ -1,5 +1,5 @@
 import { css, html, LitElement, type TemplateResult } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { property } from "lit/decorators.js";
 import {
   getDeclaredStacksList,
   getIngredientSections,
@@ -41,7 +41,6 @@ const renderSectionList = (
   </section>`;
 };
 
-@customElement("soustack-recipe")
 export class SoustackRecipe extends LitElement {
   static styles = [
     soustackTokens,
@@ -157,6 +156,17 @@ export class SoustackRecipe extends LitElement {
       </div>
     `;
   }
+}
+
+// Register the custom element with error handling for HMR/reload scenarios
+// Always use try-catch since customElements.get() check can have race conditions
+const elementName = "soustack-recipe";
+
+try {
+  customElements.define(elementName, SoustackRecipe);
+} catch (error) {
+  // Element already defined (can happen with HMR or multiple module loads)
+  // This is expected and safe to ignore
 }
 
 declare global {

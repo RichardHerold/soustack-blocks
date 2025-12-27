@@ -1,5 +1,5 @@
 import { css, html, LitElement, type TemplateResult } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { property } from "lit/decorators.js";
 import {
   getDeclaredStacksList,
   getProfile,
@@ -33,7 +33,6 @@ const compareStackNames = (a: string, b: string): number => {
   return a.localeCompare(b);
 };
 
-@customElement("soustack-badges")
 export class SoustackBadges extends LitElement {
   static styles = css`
     :host {
@@ -118,6 +117,15 @@ export class SoustackBadges extends LitElement {
 
     return html`<div class="badges">${badges}</div>`;
   }
+}
+
+// Register the custom element with error handling for HMR/reload scenarios
+const badgesElementName = "soustack-badges";
+try {
+  customElements.define(badgesElementName, SoustackBadges);
+} catch (error) {
+  // Element already defined (can happen with HMR or multiple module loads)
+  // This is expected and safe to ignore
 }
 
 declare global {
