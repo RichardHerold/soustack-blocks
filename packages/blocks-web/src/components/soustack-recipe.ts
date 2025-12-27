@@ -7,6 +7,7 @@ import {
   getRecipeName,
   type RecipeSection,
 } from "@soustack/blocks-core";
+import { soustackTokens } from "../styles/tokens.js";
 
 const renderSectionList = (
   title: string,
@@ -42,96 +43,97 @@ const renderSectionList = (
 
 @customElement("soustack-recipe")
 export class SoustackRecipe extends LitElement {
-  static styles = css`
-    :host {
-      --soustack-accent: #3b82f6;
-      --soustack-border: #e5e7eb;
-      --soustack-card-bg: #ffffff;
-      --soustack-text: #1f2933;
-      --soustack-text-muted: #6b7280;
-      --soustack-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  static styles = [
+    soustackTokens,
+    css`
+      :host {
+        display: block;
+        max-width: 720px;
+        font-family: var(--soustack-font-sans);
+        font-size: var(--soustack-font-size-base);
+        line-height: var(--soustack-line-height);
+      }
 
-      display: block;
-      max-width: 720px;
-    }
+      .recipe-card {
+        border: 1px solid var(--soustack-border);
+        border-radius: var(--soustack-radius);
+        background: var(--soustack-card-bg);
+        color: var(--soustack-text);
+        padding: var(--soustack-space-3);
+        box-shadow: var(--soustack-shadow);
+        transition: box-shadow 0.2s ease;
+      }
 
-    .recipe-card {
-      border: 1px solid var(--soustack-border);
-      border-radius: 12px;
-      background: var(--soustack-card-bg);
-      color: var(--soustack-text);
-      padding: 1.5rem;
-      box-shadow: var(--soustack-shadow);
-      transition: box-shadow 0.2s ease;
-    }
+      .recipe-card:hover {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
 
-    .recipe-card:hover {
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    }
+      .recipe-header {
+        margin-bottom: var(--soustack-space-3);
+      }
 
-    .recipe-header {
-      margin-bottom: 1.5rem;
-    }
+      .recipe-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--soustack-text);
+        line-height: 1.2;
+      }
 
-    .recipe-title {
-      margin: 0;
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--soustack-text);
-    }
+      .recipe-section {
+        margin-bottom: var(--soustack-space-3);
+      }
 
-    .recipe-section {
-      margin-bottom: 1.5rem;
-    }
+      .recipe-section:last-child {
+        margin-bottom: 0;
+      }
 
-    .recipe-section:last-child {
-      margin-bottom: 0;
-    }
+      .section-title {
+        margin: 0 0 0.75rem;
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--soustack-text);
+        line-height: 1.3;
+      }
 
-    .section-title {
-      margin: 0 0 0.75rem;
-      font-size: 1.125rem;
-      font-weight: 600;
-      color: var(--soustack-text);
-    }
+      .subsection {
+        margin-bottom: var(--soustack-space-2);
+      }
 
-    .subsection {
-      margin-bottom: 1rem;
-    }
+      .subsection:last-child {
+        margin-bottom: 0;
+      }
 
-    .subsection:last-child {
-      margin-bottom: 0;
-    }
+      .subsection-label {
+        display: block;
+        margin-bottom: var(--soustack-space-1);
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--soustack-text-muted);
+      }
 
-    .subsection-label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--soustack-text-muted);
-    }
+      .items {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: var(--soustack-space-1);
+      }
 
-    .items {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
+      .items li {
+        line-height: var(--soustack-line-height);
+      }
 
-    .items li {
-      line-height: 1.6;
-    }
-
-    .empty {
-      color: var(--soustack-text-muted);
-      font-style: italic;
-      margin: 0;
-    }
-  `;
+      .empty {
+        color: var(--soustack-text-muted);
+        font-style: italic;
+        margin: 0;
+      }
+    `,
+  ];
 
   @property({ attribute: false })
   recipe: unknown;
