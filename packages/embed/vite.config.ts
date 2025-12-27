@@ -13,8 +13,8 @@ export default defineConfig({
       formats: ["es", "umd"]
     },
     rollupOptions: {
+      // Don't externalize anything - bundle everything for self-contained UMD
       output: {
-        // Ensure UMD bundle is self-contained for browser use
         globals: {}
       }
     }

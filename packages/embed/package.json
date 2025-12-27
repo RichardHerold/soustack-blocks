@@ -21,6 +21,9 @@
     "build": "vite build && tsc -p tsconfig.json",
     "clean": "rm -rf dist"
   },
+  "dependencies": {
+    "@soustack/blocks-web": "file:../blocks-web"
+  },
   "devDependencies": {
     "typescript": "^5.4.5",
     "vite": "^5.2.0"
