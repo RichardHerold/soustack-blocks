@@ -1,0 +1,29 @@
+{
+  "name": "@soustack/embed",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "main": "./dist/embed.umd.js",
+  "module": "./dist/embed.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/embed.es.js",
+      "require": "./dist/embed.umd.js",
+      "default": "./dist/embed.es.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.json",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "vite": "^5.2.0"
+  }
+}
+
