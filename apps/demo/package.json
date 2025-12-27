@@ -8,7 +8,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@soustack/blocks-web": "file:../../packages/blocks-web"
+    "@soustack/blocks-web": "file:../../packages/blocks-web",
+    "@soustack/embed": "file:../../packages/embed"
   },
   "devDependencies": {
     "typescript": "^5.4.5",

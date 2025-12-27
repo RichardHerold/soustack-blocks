@@ -1,4 +1,5 @@
 import "@soustack/blocks-web";
+import { init } from "@soustack/embed";
 import { recipeFixture } from "./demo-data";
 
 const app = document.querySelector<HTMLDivElement>("#app");
@@ -20,3 +21,6 @@ if (app) {
 } else {
   throw new Error("Missing #app root element.");
 }
+
+// Initialize embed
+init();
