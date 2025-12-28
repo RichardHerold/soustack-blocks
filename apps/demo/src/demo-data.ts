@@ -8,7 +8,10 @@ export const interactiveRecipeFixture = {
     scaling: { major: 1 },
     structured: { quantity: 1 }
   },
-  yield: { servings: 24 },
+  yield: { 
+    amount: 24,
+    unit: "cookies"
+  },
   ingredients: [
     {
       section: "Dry Ingredients",

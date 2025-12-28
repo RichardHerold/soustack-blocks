@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import {
   getRecipeName,
   getServingsAmount,
+  getYieldUnit,
   hasStack,
   MIN_SERVINGS,
   isIngredientSubsection,
@@ -638,7 +639,10 @@ export class SoustackRecipeCard extends LitElement {
 
   private renderViewToggle(): TemplateResult {
     const currentServings = Math.floor(this.currentServings);
-    const servingText = currentServings === 1 ? "serving" : "servings";
+    const yieldUnit = getYieldUnit(this.recipe);
+    const servingText = yieldUnit 
+      ? yieldUnit 
+      : (currentServings === 1 ? "serving" : "servings");
     const hasScalingStack = hasStack(this.recipe, "scaling");
     
     return html`

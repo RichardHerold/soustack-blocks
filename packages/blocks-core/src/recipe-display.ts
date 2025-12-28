@@ -465,6 +465,25 @@ export function getServingsAmount(recipe: unknown): number {
   return typeof servings === "number" && servings > 0 ? servings : 1;
 }
 
+/**
+ * Get yield unit from recipe (if defined in yield object).
+ */
+export function getYieldUnit(recipe: unknown): string | undefined {
+  if (typeof recipe !== "object" || recipe === null) {
+    return undefined;
+  }
+
+  const r = recipe as Record<string, unknown>;
+  const yieldObj = r.yield;
+  
+  if (typeof yieldObj === "object" && yieldObj !== null) {
+    const unit = (yieldObj as { unit?: string }).unit;
+    return typeof unit === "string" ? unit : undefined;
+  }
+
+  return undefined;
+}
+
 export { MIN_SERVINGS };
 
 /**
