@@ -11,6 +11,8 @@ import {
   extractIngredientText,
   extractInstructionText,
   scaleIngredient,
+  normalizeSoustackIngredients,
+  normalizeSoustackInstructions,
   type IngredientEntry,
   type InstructionEntry,
 } from "@soustack/blocks-core";
@@ -21,14 +23,25 @@ type RecipeLike = {
   title?: string;
   servings?: number | { amount?: number };
   yield?: number | { servings?: number; amount?: number };
-  ingredients?: IngredientEntry[];
-  instructions?: InstructionEntry[];
+  ingredients?: IngredientEntry[] | unknown;
+  instructions?: InstructionEntry[] | unknown;
   equipment?: string[];
   scaleWarnings?: string[];
   time?: {
     prep?: number | string;
     cook?: number | string;
     total?: number | string;
+  };
+  metadata?: {
+    equipment?: string[];
+    time?: {
+      prep?: number | string;
+      cook?: number | string;
+      total?: number | string;
+    };
+    scaleWarnings?: string[];
+    ingredientMetadata?: Record<string, Record<number, Record<string, unknown>>>;
+    instructionMetadata?: Record<string, Record<number, Record<string, unknown>>>;
   };
   [key: string]: unknown;
 };
@@ -859,8 +872,10 @@ export class SoustackRecipeCard extends LitElement {
   }
 
   private renderMiseEnPlace(recipe: RecipeLike): TemplateResult {
-    const equipment = recipe.equipment || [];
-    const ingredients = recipe.ingredients || [];
+    const metadata = recipe.metadata;
+    const equipment = metadata?.equipment || recipe.equipment || [];
+    const rawIngredients = recipe.ingredients || [];
+    const ingredients = normalizeSoustackIngredients(rawIngredients, metadata);
 
     // Flatten ingredients and group by prepAction
     const flattened = flattenIngredientEntries(ingredients);
@@ -955,11 +970,21 @@ export class SoustackRecipeCard extends LitElement {
     }
 
     const name = getRecipeName(recipe) || "Recipe";
-    const ingredients = recipe.ingredients || [];
-    const instructions = recipe.instructions || [];
+    
+    // Normalize ingredients and instructions from soustack schema if needed
+    const rawIngredients = recipe.ingredients || [];
+    const rawInstructions = recipe.instructions || [];
+    const metadata = recipe.metadata;
+    
+    const ingredients = normalizeSoustackIngredients(rawIngredients, metadata);
+    const instructions = normalizeSoustackInstructions(rawInstructions, metadata);
+    
+    // Get equipment, time, and scaleWarnings from metadata or top-level
+    const equipment = metadata?.equipment || recipe.equipment || [];
+    const time = metadata?.time || recipe.time;
     const scaleWarnings =
-      this.scaleFactor !== 1 && recipe.scaleWarnings
-        ? recipe.scaleWarnings
+      this.scaleFactor !== 1 && (metadata?.scaleWarnings || recipe.scaleWarnings)
+        ? (metadata?.scaleWarnings || recipe.scaleWarnings)
         : undefined;
 
     return html`
@@ -967,10 +992,10 @@ export class SoustackRecipeCard extends LitElement {
         <header class="recipe-header">
           <h2 class="recipe-title">${name}</h2>
         </header>
-        ${recipe.time?.total && !this.expanded
+        ${time?.total && !this.expanded
           ? html`
               <div class="recipe-card-collapsed-info">
-                <span>Total time: ${recipe.time.total}</span>
+                <span>Total time: ${time.total}</span>
               </div>
             `
           : null}
@@ -997,27 +1022,27 @@ export class SoustackRecipeCard extends LitElement {
                   ${this.renderIngredients(ingredients)}
                   ${this.renderInstructions(instructions)}
                 </div>
-                ${recipe.time
+                ${time
                   ? html`
                       <div class="time-summary">
-                        ${recipe.time.prep
+                        ${time.prep
                           ? html`
                               <div class="time-summary-item">
-                                Prep: ${recipe.time.prep}
+                                Prep: ${time.prep}
                               </div>
                             `
                           : null}
-                        ${recipe.time.cook
+                        ${time.cook
                           ? html`
                               <div class="time-summary-item">
-                                Cook: ${recipe.time.cook}
+                                Cook: ${time.cook}
                               </div>
                             `
                           : null}
-                        ${recipe.time.total
+                        ${time.total
                           ? html`
                               <div class="time-summary-item">
-                                Total: ${recipe.time.total}
+                                Total: ${time.total}
                               </div>
                             `
                           : null}

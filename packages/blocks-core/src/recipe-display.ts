@@ -467,3 +467,94 @@ export function getServingsAmount(recipe: unknown): number {
 
 export { MIN_SERVINGS };
 
+/**
+ * Normalize soustack schema format to component format.
+ * Converts section/ingredients to subsection/items and merges metadata.
+ */
+export function normalizeSoustackIngredients(
+  ingredients: unknown,
+  metadata?: {
+    ingredientMetadata?: Record<string, Record<number, Record<string, unknown>>>;
+  }
+): IngredientEntry[] {
+  if (!Array.isArray(ingredients)) {
+    return [];
+  }
+
+  return ingredients.map((section) => {
+    if (typeof section !== "object" || section === null) {
+      return section as IngredientEntry;
+    }
+
+    const sect = section as Record<string, unknown>;
+    
+    // Check if it's soustack schema format (section + ingredients)
+    if ("section" in sect && "ingredients" in sect && Array.isArray(sect.ingredients)) {
+      const sectionName = String(sect.section);
+      const sectionIngredients = sect.ingredients as Array<Record<string, unknown>>;
+      
+      // Merge metadata into each ingredient
+      const items = sectionIngredients.map((ing, index) => {
+        const ingMetadata = metadata?.ingredientMetadata?.[sectionName]?.[index] || {};
+        return { ...ing, ...ingMetadata };
+      });
+
+      return {
+        subsection: sectionName,
+        items: items as IngredientEntry[]
+      };
+    }
+
+    // Already in component format or plain entry
+    return section as IngredientEntry;
+  });
+}
+
+/**
+ * Normalize soustack schema format to component format.
+ * Converts section/steps to subsection/items and merges metadata.
+ */
+export function normalizeSoustackInstructions(
+  instructions: unknown,
+  metadata?: {
+    instructionMetadata?: Record<string, Record<number, Record<string, unknown>>>;
+  }
+): InstructionEntry[] {
+  if (!Array.isArray(instructions)) {
+    return [];
+  }
+
+  return instructions.map((section) => {
+    if (typeof section !== "object" || section === null) {
+      return section as InstructionEntry;
+    }
+
+    const sect = section as Record<string, unknown>;
+    
+    // Check if it's soustack schema format (section + steps)
+    if ("section" in sect && "steps" in sect && Array.isArray(sect.steps)) {
+      const sectionName = String(sect.section);
+      const sectionSteps = sect.steps as Array<string | Record<string, unknown>>;
+      
+      // Merge metadata into each step
+      const items = sectionSteps.map((step, index) => {
+        const stepMetadata = metadata?.instructionMetadata?.[sectionName]?.[index] || {};
+        
+        if (typeof step === "string") {
+          return { step, ...stepMetadata };
+        }
+        
+        return { ...step, ...stepMetadata };
+      });
+
+      return {
+        subsection: sectionName,
+        items: items as InstructionEntry[]
+      };
+    }
+
+    // Already in component format or plain entry
+    return section as InstructionEntry;
+  });
+}
+

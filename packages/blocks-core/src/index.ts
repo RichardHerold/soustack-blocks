@@ -27,6 +27,8 @@ export {
   formatDuration,
   scaleIngredient,
   getServingsAmount,
+  normalizeSoustackIngredients,
+  normalizeSoustackInstructions,
   MIN_SERVINGS,
   type IngredientEntry,
   type InstructionEntry,
