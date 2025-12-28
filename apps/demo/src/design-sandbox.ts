@@ -2,13 +2,13 @@ import "@soustack/blocks-web";
 import { interactiveRecipeFixture } from "./demo-data";
 
 /**
- * Design Sandbox for <soustack-recipe> component
+ * Design Sandbox for <soustack-recipe-card> component
  * 
  * This file provides fast-iteration testing for recipe card designs.
  * 
  * To add more fixtures:
  * - Add new recipe objects to the fixtures array below
- * - Follow the RecipeLike structure: { name, ingredients, instructions, stacks? }
+ * - Follow the RecipeLike structure: { name, ingredients, instructions, servings?, equipment?, etc. }
  * 
  * To customize theming:
  * - Modify CSS variables in the frame containers (e.g., --soustack-accent, --soustack-card-bg)
@@ -380,7 +380,7 @@ export function renderDesignSandbox(container: HTMLElement): void {
   const interactiveContainer = document.getElementById("interactive-recipe-card-demo");
   if (interactiveContainer) {
     const recipeCard = document.createElement("soustack-recipe-card");
-    recipeCard.recipe = interactiveRecipeFixture;
+    (recipeCard as any).recipe = interactiveRecipeFixture;
     recipeCard.setAttribute("expanded", "");
     interactiveContainer.appendChild(recipeCard);
   }
@@ -390,8 +390,9 @@ export function renderDesignSandbox(container: HTMLElement): void {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    const recipeEl = document.createElement("soustack-recipe");
+    const recipeEl = document.createElement("soustack-recipe-card");
     (recipeEl as any).recipe = recipe;
+    (recipeEl as any).setAttribute("expanded", "");
     container.appendChild(recipeEl);
   };
 

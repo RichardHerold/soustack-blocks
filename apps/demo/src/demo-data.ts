@@ -1,38 +1,4 @@
-export const recipeFixture = {
-  name: "Soustack Seed Recipe",
-  profile: "scalable",
-  stacks: {
-    quantified: { version: { major: 2 } },
-    scaling: { major: 1 },
-    structured: { quantity: 1 }
-  },
-  ingredients: [
-    {
-      section: "Dough",
-      ingredients: [
-        { name: "Flour", quantity: 500 },
-        { name: "Water", quantity: "320ml" },
-        { name: "Instant yeast", amount: 5, description: "g" }
-      ]
-    },
-    {
-      section: "Finishing",
-      ingredients: ["Olive oil", "Salt to taste"]
-    }
-  ],
-  instructions: [
-    {
-      section: "Prep",
-      steps: ["Combine dry ingredients.", { step: "Mix in water until shaggy." }]
-    },
-    {
-      section: "Bake",
-      steps: ["Rest dough 30 minutes.", "Bake until golden."]
-    }
-  ]
-};
-
-// Comprehensive recipe fixture for soustack-recipe-card testing
+// Recipe fixture for soustack-recipe-card
 export const interactiveRecipeFixture = {
   name: "Classic Chocolate Chip Cookies",
   servings: { amount: 24 },

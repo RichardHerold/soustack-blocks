@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import {
   getRecipeName,
   getServingsAmount,
+  hasStack,
   MIN_SERVINGS,
   isIngredientSubsection,
   isInstructionSubsection,
@@ -52,6 +53,17 @@ export class SoustackRecipeCard extends LitElement {
         color: var(--soustack-text);
         padding: 1.25rem;
         box-shadow: var(--soustack-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+        cursor: pointer;
+        transition: box-shadow 0.2s ease, max-width 0.2s ease;
+        max-width: 370px;
+      }
+
+      .recipe-card:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .recipe-card.expanded {
+        max-width: 100%;
       }
 
       .recipe-header {
@@ -59,16 +71,8 @@ export class SoustackRecipeCard extends LitElement {
         justify-content: space-between;
         align-items: center;
         margin-bottom: 1rem;
-        padding: 0.75rem 1rem;
-        border: 2px solid #ff6b35;
-        border-radius: 3px;
-        background: #fff;
-        cursor: pointer;
         user-select: none;
-      }
-
-      .recipe-header:hover {
-        background: #fff5f0;
+        pointer-events: none;
       }
 
       .recipe-title {
@@ -82,13 +86,7 @@ export class SoustackRecipeCard extends LitElement {
       }
 
       .expand-icon {
-        font-size: 1.25rem;
-        color: #ff6b35;
-        transition: transform 0.2s ease;
-      }
-
-      .expand-icon.expanded {
-        transform: rotate(180deg);
+        display: none;
       }
 
       .recipe-content {
@@ -97,6 +95,23 @@ export class SoustackRecipeCard extends LitElement {
 
       .recipe-content.expanded {
         display: block;
+      }
+
+      .recipe-card-collapsed-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem 1rem;
+        background: #f9fafb;
+        border-radius: 3px;
+        font-size: 0.875rem;
+        color: var(--soustack-text-muted);
+        user-select: none;
+        pointer-events: none;
+      }
+
+      .recipe-card-collapsed-info.hidden {
+        display: none;
       }
 
       .view-toggle {
@@ -540,6 +555,10 @@ export class SoustackRecipeCard extends LitElement {
       this.originalServings = getServingsAmount(this.recipe);
       this.scaleFactor = 1;
       this.scaleFactorInput = "1";
+      // If recipe doesn't have scaling stack and we're on scale view, switch to cook
+      if (this.view === "scale" && !hasStack(this.recipe, "scaling")) {
+        this.view = "cook";
+      }
     }
   }
 
@@ -547,7 +566,18 @@ export class SoustackRecipeCard extends LitElement {
     return this.originalServings * this.scaleFactor;
   }
 
-  private toggleExpand(): void {
+  private toggleExpand(event: Event): void {
+    // Prevent toggling if clicking on interactive elements
+    const target = event.target as HTMLElement;
+    if (
+      target.tagName === "BUTTON" ||
+      target.tagName === "INPUT" ||
+      target.closest("button") ||
+      target.closest("input") ||
+      target.closest("a")
+    ) {
+      return;
+    }
     this.expanded = !this.expanded;
   }
 
@@ -596,6 +626,7 @@ export class SoustackRecipeCard extends LitElement {
   private renderViewToggle(): TemplateResult {
     const currentServings = Math.floor(this.currentServings);
     const servingText = currentServings === 1 ? "serving" : "servings";
+    const hasScalingStack = hasStack(this.recipe, "scaling");
     
     return html`
       <div class="view-toggle">
@@ -611,12 +642,16 @@ export class SoustackRecipeCard extends LitElement {
         >
           Mise en place
         </button>
-        <button
-          class="view-toggle-button ${this.view === "scale" ? "active" : ""}"
-          @click=${() => this.setView("scale")}
-        >
-          Scale
-        </button>
+        ${hasScalingStack
+          ? html`
+              <button
+                class="view-toggle-button ${this.view === "scale" ? "active" : ""}"
+                @click=${() => this.setView("scale")}
+              >
+                Scale
+              </button>
+            `
+          : null}
       </div>
       <div class="servings-display">
         Makes ${currentServings} ${servingText}
@@ -688,12 +723,14 @@ export class SoustackRecipeCard extends LitElement {
 
     const renderIngredientItem = (entry: IngredientEntry): TemplateResult => {
       const scaled = scaleIngredient(entry, this.scaleFactor);
+      // Only show warnings when recipe is being scaled (scaleFactor !== 1)
+      const showWarning = scaled.warning && this.scaleFactor !== 1;
       return html`
         <li
-          class="ingredient-item ${scaled.warning ? "has-warning" : ""}"
+          class="ingredient-item ${showWarning ? "has-warning" : ""}"
         >
           ${scaled.display}
-          ${scaled.warning
+          ${showWarning
             ? html`<span class="ingredient-warning">${scaled.warning}</span>`
             : null}
         </li>
@@ -926,11 +963,17 @@ export class SoustackRecipeCard extends LitElement {
         : undefined;
 
     return html`
-      <div class="recipe-card">
-        <header class="recipe-header" @click=${this.toggleExpand}>
+      <div class="recipe-card ${this.expanded ? "expanded" : ""}" @click=${this.toggleExpand}>
+        <header class="recipe-header">
           <h2 class="recipe-title">${name}</h2>
-          <span class="expand-icon ${this.expanded ? "expanded" : ""}">▼</span>
         </header>
+        ${recipe.time?.total && !this.expanded
+          ? html`
+              <div class="recipe-card-collapsed-info">
+                <span>Total time: ${recipe.time.total}</span>
+              </div>
+            `
+          : null}
         <div class="recipe-content ${this.expanded ? "expanded" : ""}">
           ${this.renderViewToggle()}
           ${this.view === "scale"
