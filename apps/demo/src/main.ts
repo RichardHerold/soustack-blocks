@@ -15,10 +15,10 @@ if (app) {
   badgesDev.mode = "dev";
   badgesDev.recipe = recipeFixture;
 
-  const recipe = document.createElement("soustack-recipe");
-  recipe.recipe = recipeFixture;
+  const recipeCard = document.createElement("soustack-recipe-card");
+  recipeCard.recipe = recipeFixture;
 
-  app.append(badgesUser, badgesDev, recipe);
+  app.append(badgesUser, badgesDev, recipeCard);
 } else {
   throw new Error("Missing #app root element.");
 }
