@@ -13,6 +13,11 @@ export {
   type RecipeSection,
 } from "./recipe";
 export {
+  getInstructionParagraphs,
+  getInstructionSteps,
+  hasInstructionParagraphs,
+} from "./instructions";
+export {
   inferProfileFromStacks,
   KNOWN_STACK_ORDER,
   PROFILES,
